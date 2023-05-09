@@ -1,7 +1,23 @@
 import { gql } from "graphql-request";
+import { client } from "../../client";
+import { BlogPath, BlogPost } from "./types";
 import { parser } from "@/lib/parser";
-import { client } from "@/api/client";
-import { BlogPost } from "../types";
+
+export async function getBlogPaths() {
+  const query = gql`
+    query BlogPosts {
+      blogPosts {
+        id
+        title
+      }
+    }
+  `;
+
+  const data: any = await client.request(query);
+  const paths: BlogPath[] = data.blogPosts;
+
+  return paths;
+}
 
 export async function getBlogPost(id: string) {
   const query = gql`
