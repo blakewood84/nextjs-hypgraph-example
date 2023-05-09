@@ -2,8 +2,9 @@ import { gql } from "graphql-request";
 import { client } from "../../client";
 import { BlogPath, BlogPost } from "./types";
 import { parser } from "@/lib/parser";
+import { cache } from "react";
 
-export async function getBlogPaths() {
+export const getBlogPaths = cache(async () => {
   const query = gql`
     query BlogPosts {
       blogPosts {
@@ -17,9 +18,9 @@ export async function getBlogPaths() {
   const paths: BlogPath[] = data.blogPosts;
 
   return paths;
-}
+});
 
-export async function getBlogPost(id: string) {
+export const getBlogPost = cache(async (id: string) => {
   const query = gql`
     query BlogPosts {
       blogPost(where: { id: "${id}" }) {
@@ -39,4 +40,4 @@ export async function getBlogPost(id: string) {
   const post: BlogPost = Object.assign(data.blogPost, { body: content.value });
 
   return post;
-}
+});
